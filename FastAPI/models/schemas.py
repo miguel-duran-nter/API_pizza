@@ -12,6 +12,7 @@ class User(Base):
     email = Column(String(120), unique = True, index = True)
     address = Column(String(255), nullable = False)
     profile = Column(String(50), nullable = False, default = "cliente")
+    password = Column(String, nullable = False)
 
     orders = relationship("Order", back_populates="user")
 
