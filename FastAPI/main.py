@@ -14,6 +14,4 @@ app.include_router(orders.app)
 @app.get("/")
 async def root():
     return {"detail": "Bienvenido a mi API Pizzeria"}
-
-# if __name__ = '__main__':
     

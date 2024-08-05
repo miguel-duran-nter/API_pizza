@@ -1,8 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import select
-from typing import List
 from models import schemas
 from models.dto import PizzaList, PizzaDetail
 

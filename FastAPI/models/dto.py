@@ -21,6 +21,14 @@ class UserOrder(BaseModel):
     class Config:
         from_attributes = True
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 class Ingredient(BaseModel):
     name: str
 
@@ -28,8 +36,8 @@ class Ingredient(BaseModel):
         from_attributes = True
 
 class PizzaDTO(BaseModel):
-    id: int
     name: str
+    price: float
 
     class Config:
         from_attributes = True
@@ -51,25 +59,20 @@ class PizzaDetail(BaseModel):
         from_attributes = True
 
 class OrderDetailBase(BaseModel):
-    pizza: PizzaList
+    pizza_id: int
     quantity: int
-    unit_price: float
 
     class Config:
         from_attributes = True
 
-class OrderDetailCreate(OrderDetailBase):
-    pass
-
 class OrderDetail(OrderDetailBase):
-    detail_id: int
-    order_id: int
+    pizza: PizzaDTO
 
     class Config:
         from_attributes = True
 
 class OrderBase(BaseModel):
-    user: UserOrder
+    user_id: int
     order_date: datetime
     total: float
     status: str
@@ -77,12 +80,22 @@ class OrderBase(BaseModel):
     class Config:
         from_attributes = True
 
-class OrderCreate(OrderBase):
-    details: List[OrderDetailCreate]
+class OrderCreate(BaseModel):
+    user_id: int
+    order_date: datetime
+    status: str
+    details: List[OrderDetailBase]  # Sin el campo `total`
+
+    class Config:
+        from_attributes = True
+
+class OrderStatusUpdate(BaseModel):
+    status: str
 
 class Order(OrderBase):
     order_id: int
     details: List[OrderDetail]
+    user: UserOrder
 
     class Config:
         from_attributes = True
