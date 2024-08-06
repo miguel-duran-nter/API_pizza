@@ -83,7 +83,7 @@ class OrderDetail(OrderDetailBase):
         from_attributes = True
 
 class OrderBase(BaseModel):
-    # user_id: int
+    user_id: int
     order_date: datetime
     total: float
     status: str
