@@ -1,9 +1,8 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status, Request
-from services.users import create_user, user_detail, read_user
-from models.dto import User
+from services.users import create_user, user_detail, read_user, get_user_by_id, update_user
+from models.dto import User, UserUpdate
 from db.client import SessionLocal
-from services.auth import get_profile
 
 app = APIRouter(prefix="/users", tags=["Users"])
 
@@ -42,3 +41,19 @@ async def users(request: Request):
         return users
     else:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied")
+
+@app.put("/update/{user_id}", response_model=UserUpdate)
+async def update_user_endpoint(user_id: int, user_update: UserUpdate):
+    """
+    Update data who has the provided id
+    - **user_id**:  id of the user you want to update data
+    """
+    db = SessionLocal()
+    user = await get_user_by_id(db, user_id)
+    
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    updated_user = await update_user(db, user, user_update)
+    
+    return updated_user

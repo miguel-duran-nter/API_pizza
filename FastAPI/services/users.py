@@ -2,7 +2,7 @@ from fastapi import HTTPException, status, Request
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from models import schemas
-from models.dto import User, UserOrder
+from models.dto import User, UserOrder, UserUpdate
 
 
 async def create_user(user: User, db: Session):
@@ -57,3 +57,25 @@ async def read_user(db: Session):
     except SQLAlchemyError as e:
         error_msg = str(e.__cause__) or str(e)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=error_msg)
+
+
+async def get_user_by_id(db: Session, user_id: int):
+    with db as session:
+        return session.query(User).filter(schemas.User.id == user_id).first()
+
+async def update_user(db: Session, user: User, user_update: UserUpdate):
+    # Asegurarse de que la instancia esté asociada con la sesión actual
+    user = db.merge(user)
+
+    if user_update.email:
+        user.email = user_update.email
+    if user_update.name:
+        user.name = user_update.name
+    if user_update.phone:
+        user.phone = user_update.phone
+    if user_update.address:
+        user.address = user_update.address
+
+    db.commit()
+    db.refresh(user)
+    return user

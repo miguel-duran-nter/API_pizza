@@ -32,6 +32,12 @@ class UserOrder(BaseModel):
         from_attributes = True
         schema_extra = {}
 
+class UserUpdate(BaseModel):
+    email: Optional[str] = None
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+
 class LoginRequest(BaseModel):
     username: str
     password: str
