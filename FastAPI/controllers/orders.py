@@ -1,11 +1,8 @@
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, HTTPException, Request, status, Query, Path
 from typing import List
 from db.client import SessionLocal
 from models.dto import Order, OrderCreate, OrderStatusUpdate
-from services.orders import create_order, list_orders
-
-from models import schemas
-from sqlalchemy.orm import joinedload
+from services.orders import create_order, list_orders, get_user_orders, change_status
 
 app = APIRouter(prefix="/orders", tags=["Orders"])
 
@@ -43,7 +40,9 @@ async def get_orders(request: Request):
 
 
 @app.put("/{order_id}", response_model=Order)
-def update_order_status(order_id: int, order_update: OrderStatusUpdate, request: Request):
+async def update_order_status(
+    order_id: int, order_update: OrderStatusUpdate, request: Request
+):
     """
     Updates the order status with the entered id
 
@@ -51,28 +50,24 @@ def update_order_status(order_id: int, order_update: OrderStatusUpdate, request:
     """
     db = SessionLocal()
     user_profile = request.cookies.get("session_profile")
-    if user_profile == 'admin':
-        db_order = (
-            db.query(schemas.Order).filter(schemas.Order.order_id == order_id).first()
-        )
-
-        if not db_order:
-            raise HTTPException(status_code=404, detail="Order not found")
-
-        db_order.status = order_update.status  # type:ignore
-        db.commit()
-        db.refresh(db_order)
-
-        db_order_with_details = (
-            db.query(schemas.Order)
-            .options(
-                joinedload(schemas.Order.user),
-                joinedload(schemas.Order.details).joinedload(schemas.OrderDetail.pizza),
-            )
-            .filter(schemas.Order.order_id == db_order.order_id)
-            .first()
-        )
-
-        return db_order_with_details
+    if user_profile == "admin":
+        result = await change_status(db, order_update, order_id)
+        return result
     else:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied"
+        )
+
+
+@app.get("/history/{user_id}", response_model=List[Order])
+async def history_orders(user_id: int):
+    try:
+        db = SessionLocal()
+        orders_data = await get_user_orders(db, user_id)
+        return orders_data  # Los datos se devolverán como una lista de dictados
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )
