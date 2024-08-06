@@ -1,20 +1,18 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Response
 from db.client import SessionLocal
 from models import schemas
+from services.auth import login
 from models.dto import LoginRequest
 
 app = APIRouter(prefix = "/auth", tags = ["Auth"])
 
 @app.post("/login")
-async def login(request: LoginRequest):
+async def log_in(request: LoginRequest, response: Response):
     db = SessionLocal()
-    with db as session:
-        user_db = session.query(schemas.User).filter(schemas.User.username == request.username).first()
-        if user_db:
-            user = session.query(schemas.User).filter(schemas.User.password == request.password).first()
-            if user:
-                return user
-            else:
-                raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Password incorrect")
-        else:
-            raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "User not found, username or password incorrect")
+    log = await login(db, request, response)
+    return log
+        
+@app.post("/logout")
+async def logout(response: Response):
+    response.delete_cookie(key = "session_profile")
+    return {"message": "Logged out successfully"}
