@@ -61,7 +61,7 @@ async def read_user(db: Session):
 
 async def get_user_by_id(db: Session, user_id: int):
     with db as session:
-        return session.query(User).filter(schemas.User.id == user_id).first()
+        return session.query(schemas.User).filter(schemas.User.id == user_id).first()
 
 async def update_user(db: Session, user: User, user_update: UserUpdate):
     # Asegurarse de que la instancia esté asociada con la sesión actual
