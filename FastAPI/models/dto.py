@@ -9,17 +9,28 @@ class User(BaseModel):
     phone: str
     address: str
     profile: str
+    password: str
 
     class Config:
         from_attributes = True
+        schema_extra = {
+            "example": {
+                "name": "Item Example",
+                "description": "This is an example item.",
+                "price": 19.99,
+                "tax": 1.50
+            }
+        }
 
 class UserOrder(BaseModel):
     name: str
+    email: str
     phone: str
     address: str
 
     class Config:
         from_attributes = True
+        schema_extra = {}
 
 class LoginRequest(BaseModel):
     username: str
@@ -72,7 +83,7 @@ class OrderDetail(OrderDetailBase):
         from_attributes = True
 
 class OrderBase(BaseModel):
-    user_id: int
+    # user_id: int
     order_date: datetime
     total: float
     status: str
@@ -84,7 +95,7 @@ class OrderCreate(BaseModel):
     user_id: int
     order_date: datetime
     status: str
-    details: List[OrderDetailBase]  # Sin el campo `total`
+    details: List[OrderDetailBase]
 
     class Config:
         from_attributes = True
