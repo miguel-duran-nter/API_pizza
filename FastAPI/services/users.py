@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from models import schemas
-from models.dto import User
+from models.dto import User, UserOrder
 
 
 async def create_user(user: User, db: Session):
@@ -21,7 +21,7 @@ async def create_user(user: User, db: Session):
 async def search_user(user_id: int, db: Session):
     try:
         db_user = db.query(schemas.User).filter(schemas.User.id == user_id).first()
-        user_dto = User(
+        user_dto = UserOrder(
             name=db_user.name,
             email=db_user.email,
             username=db_user.username,
@@ -41,13 +41,11 @@ async def read_user(db: Session):
             db_user = session.query(schemas.User).all()
             users_dto = []
             for user in db_user:
-                user_dto = User(
+                user_dto = UserOrder(
                     name=user.name,
                     email=user.email,
-                    username=user.username,
                     phone=user.phone,
                     address=user.address,
-                    profile=user.profile,
                 )
                 users_dto.append(user_dto)
             return users_dto

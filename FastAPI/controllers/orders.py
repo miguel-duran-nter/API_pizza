@@ -7,22 +7,33 @@ from services.orders import create_order, list_orders
 from models import schemas
 from sqlalchemy.orm import joinedload
 
-app = APIRouter(prefix = "/orders", tags = ["orders"])
+app = APIRouter(prefix = "/orders", tags = ["Orders"])
 
 @app.post("/", response_model=Order)
 async def post_order(order: OrderCreate):
+    """
+    Create a new pizza order
+    """
     db = SessionLocal()
     new_order = await create_order(order, db)
     return new_order
 
 @app.get("/", response_model=List[Order])
 async def get_orders():
+    """
+    List all orders
+    """
     db = SessionLocal()
     orders = await list_orders(db)
     return orders
 
 @app.put("/{order_id}", response_model=Order)
 def update_order_status(order_id: int, order_update: OrderStatusUpdate):
+    """
+    Updates the order status with the entered id
+
+    - **order_id**: the id of the order you want to update the status of
+    """
     db = SessionLocal()
     # Busca la orden en la base de datos
     db_order = db.query(schemas.Order).filter(schemas.Order.order_id == order_id).first()
