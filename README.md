@@ -28,21 +28,21 @@ Must contain at least the following verticals, whose endpoints shown below are o
     
     - A way to consult the details of each pizza in terms of ingredients, preparation, etc. will be provided. Any detail that is considered necessary and that helps its marketing.
 
-## Iniciar entorno virtual
+## Start virtual environment
 
-### Crear entorno virtual
+### Create virtual environment
 
 ```Python
 python3 -m venv .venv
 ```
 
-### Arrancar entorno virtual
+### Run virtual environment
 
 ```Python
 source .venv/bin/active
 ```
 
-## Iniciar servidor Uvicorn
+## Start Uvicorn server
 
 ```Bash
 uvicorn main:app
