@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
 
+
 class User(BaseModel):
     name: str
     username: str
@@ -13,14 +14,18 @@ class User(BaseModel):
 
     class Config:
         from_attributes = True
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                "name": "Item Example",
-                "description": "This is an example item.",
-                "price": 19.99,
-                "tax": 1.50
+                "name": "Miguel",
+                "username": "Draco",
+                "phone": "123456789",
+                "email": "miguel@email.com",
+                "address": "Calle Bienaventurado, 12",
+                "profile": "cliente",
+                "password": "contraseña",
             }
         }
+
 
 class UserOrder(BaseModel):
     name: str
@@ -30,7 +35,8 @@ class UserOrder(BaseModel):
 
     class Config:
         from_attributes = True
-        schema_extra = {}
+        json_schema_extra = {}
+
 
 class UserUpdate(BaseModel):
     email: Optional[str] = None
@@ -38,13 +44,16 @@ class UserUpdate(BaseModel):
     phone: Optional[str] = None
     address: Optional[str] = None
 
+
 class LoginRequest(BaseModel):
     username: str
     password: str
 
+
 class Token(BaseModel):
     access_token: str
     token_type: str
+
 
 class Ingredient(BaseModel):
     name: str
@@ -52,12 +61,14 @@ class Ingredient(BaseModel):
     class Config:
         from_attributes = True
 
+
 class PizzaDTO(BaseModel):
     name: str
     price: float
 
     class Config:
         from_attributes = True
+
 
 class PizzaList(BaseModel):
     image: str
@@ -67,6 +78,7 @@ class PizzaList(BaseModel):
     class Config:
         from_attributes = True
 
+
 class PizzaDetail(BaseModel):
     name: str
     price: float
@@ -75,6 +87,7 @@ class PizzaDetail(BaseModel):
     class Config:
         from_attributes = True
 
+
 class OrderDetailBase(BaseModel):
     pizza_id: int
     quantity: int
@@ -82,11 +95,13 @@ class OrderDetailBase(BaseModel):
     class Config:
         from_attributes = True
 
+
 class OrderDetail(OrderDetailBase):
     pizza: PizzaDTO
 
     class Config:
         from_attributes = True
+
 
 class OrderBase(BaseModel):
     user_id: int
@@ -97,6 +112,7 @@ class OrderBase(BaseModel):
     class Config:
         from_attributes = True
 
+
 class OrderCreate(BaseModel):
     user_id: int
     order_date: datetime
@@ -106,8 +122,10 @@ class OrderCreate(BaseModel):
     class Config:
         from_attributes = True
 
+
 class OrderStatusUpdate(BaseModel):
     status: str
+
 
 class Order(OrderBase):
     order_id: int

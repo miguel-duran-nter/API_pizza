@@ -3,12 +3,15 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from models import schemas
 from models.dto import User, UserOrder, UserUpdate
+import base64
 
 
 async def create_user(user: User, db: Session):
-    db_user = schemas.User(**user.dict())
-    try:
+    password_base64 = base64.b64encode(user.password.encode()).decode()
 
+    db_user = schemas.User(**user.dict())
+    db_user.password = password_base64
+    try:
         with db as session:
             session.add(db_user)
             session.commit()

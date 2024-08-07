@@ -2,12 +2,14 @@ from fastapi import Response, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from models import schemas
 from models.dto import LoginRequest
+import base64
 
 async def login(db: Session, request: LoginRequest, response: Response):
     with db as session:
         user_db = session.query(schemas.User).filter(schemas.User.username == str(request.username)).first()
         if user_db:
-            user = session.query(schemas.User).filter(schemas.User.password == str(request.password)).first()
+            password_base64 = base64.b64encode(request.password.encode()).decode()
+            user = session.query(schemas.User).filter(schemas.User.password == password_base64).first()
             if user:
                 session_value = user.profile
                 response.set_cookie(key="session_profile", value=str(session_value))
