@@ -15,6 +15,19 @@ class User(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserCreate(BaseModel):
+    name: str
+    username: str
+    email: str
+    phone: str
+    address: str
+    profile: str
+    password: str
+
+    class Config:
+        from_attributes = True
         json_schema_extra = {
             "example": {
                 "name": "Miguel",
@@ -91,7 +104,7 @@ class PizzaDetail(BaseModel):
 
 
 class OrderDetailBase(BaseModel):
-    # pizza_id: int
+    pizza_id: int
     quantity: int
 
     class Config:
@@ -128,6 +141,10 @@ class OrderStatusUpdate(BaseModel):
     status: str
 
 
+class OrderStatus(OrderStatusUpdate):
+    order_id: int
+
+
 class Order(OrderBase):
     order_id: int
     details: List[OrderDetail]
@@ -136,11 +153,12 @@ class Order(OrderBase):
     class Config:
         from_attributes = True
 
+
 class PaginatedOrders(BaseModel):
     total: int
     page: int
     page_size: int
-    orders: List[Order]  
+    orders: List[Order]
 
     class Config:
         from_attributes = True

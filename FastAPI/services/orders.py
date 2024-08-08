@@ -7,12 +7,10 @@ from models.dto import OrderCreate, OrderStatusUpdate
 import base64
 
 
-async def create_order(order: OrderCreate, db: Session, user_id: str, profile: str):
-    profile_uncode = base64.b64decode(profile.encode()).decode("utf-8")
-    if profile_uncode == "admin":
+async def create_order(order: OrderCreate, db: Session, user_id: int, profile: str):
+    if profile == "admin":
         with db as session:
             try:
-                user_id_decode = base64.b64decode(user_id.encode()).decode("utf-8")
                 total = 0
                 order_details = []
 
@@ -40,7 +38,7 @@ async def create_order(order: OrderCreate, db: Session, user_id: str, profile: s
                     )
 
                 db_order = schemas.Order(
-                    user_id=user_id_decode,
+                    user_id=user_id,
                     order_date=order.order_date,
                     total=total,
                     status=order.status,
@@ -77,8 +75,7 @@ async def create_order(order: OrderCreate, db: Session, user_id: str, profile: s
 async def list_orders(db: Session, profile: str, page: int, page_size: int):
     with db as session:
         try:
-            profile_decode = base64.b64decode(profile.encode()).decode("utf-8")
-            if profile_decode == "admin":
+            if profile == "admin":
                 offset = (page - 1) * page_size
 
                 # Obtener el total de órdenes

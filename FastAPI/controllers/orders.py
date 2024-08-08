@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, Request, status, Query, Path
+import base64
+from fastapi import APIRouter, HTTPException, Request, status
 from typing import List
 from db.client import SessionLocal
-from models.dto import Order, OrderCreate, OrderStatusUpdate, PaginatedOrders
+from models.dto import Order, OrderCreate, OrderStatusUpdate, PaginatedOrders, OrderStatus
 from services.orders import create_order, list_orders, get_user_orders, change_status
+from services.users import get_user_by_id
 
 app = APIRouter(prefix="/orders", tags=["Orders"])
 
@@ -15,9 +17,9 @@ async def post_order(order: OrderCreate, request: Request):
     try:
         db = SessionLocal()
         if request.cookies.get("session_id"):
-            profile_user = request.cookies.get("session_profile")
-            user_id = request.cookies.get("session_id")
-            new_order = await create_order(order, db, str(user_id), str(profile_user))
+            id_user = int(base64.b64decode(str(request.cookies.get("session_id")).encode()).decode("utf-8"))
+            user = await get_user_by_id(db, id_user)
+            new_order = await create_order(order, db, user.id, str(user.profile))
             return new_order
         else:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="You must log in")
@@ -32,17 +34,16 @@ async def get_orders(request: Request, page: int = 1, page_size: int = 10):
     """
     try:
         db = SessionLocal()
-        profile = request.cookies.get("session_profile")
-        orders = await list_orders(db, str(profile), page, page_size)
+        id_user = int(base64.b64decode(str(request.cookies.get("session_id")).encode()).decode("utf-8"))
+        user = await get_user_by_id(db, id_user)
+        orders = await list_orders(db, user.profile, page, page_size)
         return orders
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@app.put("/{order_id}", response_model=Order)
-async def update_order_status(
-    order_id: int, order_update: OrderStatusUpdate, request: Request
-):
+@app.put("/{order_id}", response_model=OrderStatus)
+async def update_order_status(order_id: int, order_update: OrderStatusUpdate, request: Request):
     """
     Updates the order status with the entered id
 
@@ -50,8 +51,9 @@ async def update_order_status(
     """
     try:
         db = SessionLocal()
-        user_profile = request.cookies.get("session_profile")
-        if user_profile == "admin":
+        id_user = int(base64.b64decode(str(request.cookies.get("session_id")).encode()).decode("utf-8"))
+        user = await get_user_by_id(db, id_user)
+        if user.profile == "admin":
             result = await change_status(db, order_update, order_id)
             return result
         else:
@@ -62,13 +64,13 @@ async def update_order_status(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@app.get("/history/{user_id}", response_model=List[Order])
-async def history_orders(user_id: int):
+@app.get("/history", response_model=List[Order])
+async def history_orders(request: Request):
     try:
         db = SessionLocal()
-        orders_data = await get_user_orders(db, user_id)
+        id_user = int(base64.b64decode(str(request.cookies.get("session_id")).encode()).decode("utf-8"))
+        user = await get_user_by_id(db, id_user)
+        orders_data = await get_user_orders(db, int(user.id))
         return orders_data  # Los datos se devolverán como una lista de dictados
     except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

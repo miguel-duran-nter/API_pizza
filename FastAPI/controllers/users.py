@@ -1,15 +1,15 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status, Request
 from services.users import create_user, user_detail, read_user, get_user_by_id, update_user
-from models.dto import User, UserUpdate
+from models.dto import UserCreate, UserUpdate, UserOrder
 from db.client import SessionLocal
 import base64
 
 app = APIRouter(prefix="/users", tags=["Users"])
 
 
-@app.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
-async def new_user(user: User):
+@app.post("/", response_model=UserCreate, status_code=status.HTTP_201_CREATED)
+async def new_user(user: UserCreate):
     """
     It is used to create/register a user
     """
@@ -21,7 +21,7 @@ async def new_user(user: User):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@app.get("/me")
+@app.get("/me", response_model=UserOrder)
 async def user_id(request: Request):
     """
     Displays the details of the user who has the provided id
@@ -35,15 +35,15 @@ async def user_id(request: Request):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@app.get("/")
+@app.get("/", response_model=List[UserOrder])
 async def users(request: Request):
     """
     Display all users
     """
     try:
         db = SessionLocal()
-        user_profile = request.cookies.get("session_profile")
-        users = await read_user(db, str(user_profile))
+        user_id= request.cookies.get("session_id")
+        users = await read_user(db, str(user_id))
         return users
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
@@ -66,3 +66,4 @@ async def update_user_endpoint(user_update: UserUpdate, request: Request):
         return updated_user
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    

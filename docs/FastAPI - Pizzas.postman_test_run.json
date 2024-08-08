@@ -1,0 +1,394 @@
+{
+	"id": "71a4172c-3623-42c2-9f03-2bc8ae84f5bb",
+	"name": "FastAPI - Pizzas",
+	"timestamp": "2024-08-08T15:17:51.082Z",
+	"collection_id": "37206243-577af1e6-06c1-4e5d-ac36-5b9456d478df",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 23,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2024-08-08T15:17:49.734Z",
+	"totalFail": 2,
+	"results": [
+		{
+			"id": "ca65c319-0a05-41a0-8904-3562666993eb",
+			"name": "Login",
+			"url": "127.0.0.1:8000/auth/login",
+			"time": 11,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				11
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "d2412433-1376-43aa-85a4-0c2c8a5374cc",
+			"name": "Post nuevo usuario",
+			"url": "127.0.0.1:8000/users/",
+			"time": 24,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				24
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "48ea16d5-4c3e-4142-a7d3-8b5952cf48b6",
+			"name": "List Users",
+			"url": "127.0.0.1:8000/users/",
+			"time": 8,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "4ee90861-c733-4f33-b528-a48773b48487",
+			"name": "User data",
+			"url": "127.0.0.1:8000/users/me",
+			"time": 6,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "883eb20c-cd55-4d90-9079-f65fd8f48d1e",
+			"name": "Update Data Users",
+			"url": "127.0.0.1:8000/users/update",
+			"time": 10,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "4b2a7d84-cc5d-4d8c-98fd-790805a76020",
+			"name": "Get Pizzas",
+			"url": "127.0.0.1:8000/pizzas/",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "8f26ce8c-31ba-49b0-8d0d-33547098f244",
+			"name": "Get pizza detail",
+			"url": "127.0.0.1:8000/pizzas/1",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "34920ccc-004e-40c2-be7c-675a35e6db29",
+			"name": "New Order",
+			"url": "127.0.0.1:8000/orders",
+			"time": 70,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				70
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "a1f76b4d-d048-43a0-bb2b-c8cbc3f0a466",
+			"name": "Get list orders",
+			"url": "127.0.0.1:8000/orders",
+			"time": 17,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				17
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "9b4d00a2-7ec5-4c79-973b-afa1cab5cd33",
+			"name": "Status Order",
+			"url": "127.0.0.1:8000/orders/25",
+			"time": 11,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				11
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "86a48967-ec13-44db-8ba5-f31229440238",
+			"name": "History Order",
+			"url": "127.0.0.1:8000/orders/history",
+			"time": 22,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				22
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "328626d2-031e-4492-b41c-546a425db4f2",
+			"name": "Logout",
+			"url": "127.0.0.1:8000/auth/logout",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 199,
+	"collection": {
+		"requests": [
+			{
+				"id": "ca65c319-0a05-41a0-8904-3562666993eb",
+				"method": "POST"
+			},
+			{
+				"id": "d2412433-1376-43aa-85a4-0c2c8a5374cc",
+				"method": "POST"
+			},
+			{
+				"id": "48ea16d5-4c3e-4142-a7d3-8b5952cf48b6",
+				"method": "GET"
+			},
+			{
+				"id": "4ee90861-c733-4f33-b528-a48773b48487",
+				"method": "GET"
+			},
+			{
+				"id": "883eb20c-cd55-4d90-9079-f65fd8f48d1e",
+				"method": "PUT"
+			},
+			{
+				"id": "4b2a7d84-cc5d-4d8c-98fd-790805a76020",
+				"method": "GET"
+			},
+			{
+				"id": "8f26ce8c-31ba-49b0-8d0d-33547098f244",
+				"method": "GET"
+			},
+			{
+				"id": "34920ccc-004e-40c2-be7c-675a35e6db29",
+				"method": "POST"
+			},
+			{
+				"id": "a1f76b4d-d048-43a0-bb2b-c8cbc3f0a466",
+				"method": "GET"
+			},
+			{
+				"id": "9b4d00a2-7ec5-4c79-973b-afa1cab5cd33",
+				"method": "PUT"
+			},
+			{
+				"id": "86a48967-ec13-44db-8ba5-f31229440238",
+				"method": "GET"
+			},
+			{
+				"id": "328626d2-031e-4492-b41c-546a425db4f2",
+				"method": "POST"
+			}
+		]
+	}
+}

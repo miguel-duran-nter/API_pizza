@@ -2,13 +2,12 @@ from fastapi import HTTPException, status, Request
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from models import schemas
-from models.dto import User, UserOrder, UserUpdate
+from models.dto import UserCreate, UserUpdate, User
 import base64
 
 
-async def create_user(user: User, db: Session):
+async def create_user(user: UserCreate, db: Session):
     password_base64 = base64.b64encode(user.password.encode()).decode()
-
     db_user = schemas.User(**user.dict())
     db_user.password = password_base64
     try:
@@ -24,43 +23,29 @@ async def create_user(user: User, db: Session):
 
 async def user_detail(user_id: str, db: Session, request: Request):
     try:
-        user_id_decode = base64.b64decode(user_id.encode()).decode("utf-8")
-        user_id_int = int(user_id_decode)
+        id_user = int(base64.b64decode(user_id.encode()).decode("utf-8"))
+        user = await get_user_by_id(db, id_user)
         with db as session:
             db_user = (
                 session.query(schemas.User)
-                .filter(schemas.User.id == user_id_int)
+                .filter(schemas.User.id == user.id)
                 .first()
             )
-            user_dto = UserOrder(
-                name=db_user.name,
-                email=db_user.email,
-                phone=db_user.phone,
-                address=db_user.address,
-            )
-            return user_dto
+            return db_user
 
     except SQLAlchemyError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
-async def read_user(db: Session, profile: str):
+async def read_user(db: Session, user_id: str):
     try:
-        profile_decode = base64.b64decode(profile.encode()).decode("utf-8")
-        if profile_decode == "admin":
+        # profile_decode = base64.b64decode(profile.encode()).decode("utf-8")
+        id_user = int(base64.b64decode(user_id.encode()).decode("utf-8"))
+        user = await get_user_by_id(db, id_user)
+        if user.profile == "admin":
             with db as session:
                 db_user = session.query(schemas.User).all()
-                user_orders = [
-                    UserOrder(
-                        name=user.name,
-                        email=user.email,
-                        phone=user.phone,
-                        address=user.address,
-                    )
-                    for user in db_user
-                ]
-
-            return user_orders
+                return db_user
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied"
