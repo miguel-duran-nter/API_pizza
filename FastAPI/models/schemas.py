@@ -29,6 +29,7 @@ class Pizza(Base):
     image = Column(String, index=True)
     name = Column(String, index=True)
     price = Column(Float)
+
     ingredients = relationship("Ingredient", secondary=pizza_ingredients, back_populates="pizzas")
     details = relationship("OrderDetail", back_populates="pizza")
 
@@ -44,7 +45,7 @@ class Order(Base):
 
     
     order_id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     order_date = Column(DateTime, nullable=False)
     total = Column(DECIMAL(10, 2), nullable=False)
     status = Column(String(50), nullable=False)
@@ -57,7 +58,7 @@ class OrderDetail(Base):
     __tablename__ = 'order_details'
 
     detail_id = Column(Integer, primary_key=True, index=True)
-    order_id = Column(Integer, ForeignKey('orders.order_id'), nullable=False)
+    order_id = Column(Integer, ForeignKey('orders.order_id', ondelete='CASCADE'), nullable=False)
     pizza_id = Column(Integer, ForeignKey('pizzas.id'), nullable=False)
     quantity = Column(Integer, nullable=False)
     unit_price = Column(DECIMAL(10, 2), nullable=False)

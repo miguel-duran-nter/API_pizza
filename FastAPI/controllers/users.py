@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException, status, Request
 from services.users import create_user, user_detail, read_user, get_user_by_id, update_user
 from models.dto import User, UserUpdate
 from db.client import SessionLocal
+import base64
 
 app = APIRouter(prefix="/users", tags=["Users"])
 
@@ -12,21 +13,26 @@ async def new_user(user: User):
     """
     It is used to create/register a user
     """
-    db = SessionLocal()
-    db_user = await create_user(user, db)
-    return db_user
+    try:
+        db = SessionLocal()
+        db_user = await create_user(user, db)
+        return db_user
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@app.get("/{user_id}")
-async def user_id(user_id: int, request: Request):
+@app.get("/me")
+async def user_id(request: Request):
     """
     Displays the details of the user who has the provided id
-
-    - **user_id**: id of the user you want to see the details of
     """
-    db = SessionLocal()
-    db_user = await user_detail(user_id, db, request)
-    return db_user
+    try:
+        db = SessionLocal()
+        user_id = request.cookies.get("session_id")
+        db_user = await user_detail(str(user_id), db, request)
+        return db_user
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 @app.get("/")
@@ -34,26 +40,29 @@ async def users(request: Request):
     """
     Display all users
     """
-    db = SessionLocal()
-    user_profile = request.cookies.get("session_profile")
-    if user_profile == 'admin':
-        users = await read_user(db)
+    try:
+        db = SessionLocal()
+        user_profile = request.cookies.get("session_profile")
+        users = await read_user(db, str(user_profile))
         return users
-    else:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-@app.put("/update/{user_id}", response_model=UserUpdate)
-async def update_user_endpoint(user_id: int, user_update: UserUpdate):
+@app.put("/update", response_model=UserUpdate)
+async def update_user_endpoint(user_update: UserUpdate, request: Request):
     """
     Update data who has the provided id
-    - **user_id**:  id of the user you want to update data
     """
-    db = SessionLocal()
-    user = await get_user_by_id(db, user_id)
-    
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    updated_user = await update_user(db, user, user_update)
-    
-    return updated_user
+    try:
+        db = SessionLocal()
+        user_id = base64.b64decode(str(request.cookies.get("session_id")).encode()).decode('utf-8')
+        user = await get_user_by_id(db, int(user_id))
+        
+        if user is None:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        updated_user = await update_user(db, user, user_update)
+        
+        return updated_user
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

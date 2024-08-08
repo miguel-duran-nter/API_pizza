@@ -4,29 +4,31 @@
 
 ---
 
-Must contain at least the following verticals, whose endpoints shown below are only for guidance purposes, the implementation of the http "verbs" for each endpoint will be freely chosen and must be duly justified in the README. Additionally, a Swagger is required:
+### API Specifications
 
-- /api/user:
-    
-    - It must allow logging in and out, as well as registering in the application with basic authentication (username and password).
-    
-    - It must allow editing your profile and updating your data. The minimum required fields will be phone, email and address.
-    
-    - [Admin only] A complete list of users must be available. The information in this list must contain information related to each user and their order history.
+The API is designed to include the following key verticals. The endpoints listed are suggested examples, and the HTTP verbs implemented for each can be chosen as needed. All decisions regarding endpoint design should be clearly explained in the README. Additionally, Swagger documentation is required to ensure clear and accessible API documentation.
 
-- /api/orders [optional use admin role]:
-    
-    - Orders must be displayed in order of date and time, with the first to be displayed being the last order to arrive. All relevant details for the activity of the pizzeria must be displayed, such as the data of the customer who bought the pizza and their delivery data.
-    
-    - [OPTIONAL] It will be considered to provide pagination to the endpoint.
-    
-    - As each order will need a unique identifier number for its registration, invoice, delivery, etc. A way to consult a specific order with all its details must be provided.
+#### **/api/user:**
+- **Authentication:** The API supports user authentication, allowing users to log in, log out, and register with basic credentials (username and password).
+  
+- **Profile Management:** Users can update their profile information, including essential fields such as phone number, email, and address.
+  
+- **Administrative Access:** Administrators have access to a comprehensive user list, which includes detailed information on each user, as well as their order history.
 
-- /api/pizzas:
-    
-    - A way to access the list of pizzas available on the pizzeria's menu must be provided. This list must contain the name and price of the pizza.
-    
-    - A way to consult the details of each pizza in terms of ingredients, preparation, etc. will be provided. Any detail that is considered necessary and that helps its marketing.
+#### **/api/orders [Optional Admin Role]:**
+- **Order Management:** Orders are displayed chronologically, with the most recent orders appearing first. Each order entry includes all details necessary for operational tasks, such as customer information and delivery specifics.
+
+ - **Pagination [Optional]:** Support for pagination in the order list is optional but recommended for better data management.
+
+- **Order Details:** Each order is assigned a unique identifier. The API provides an endpoint for retrieving all relevant details about a specific order using this identifier.
+
+#### **/api/pizzas:**
+- **Menu Access:** The API allows access to the pizzeria's menu, displaying the name and price of each pizza.
+
+- **Pizza Details:** Detailed information on each pizza, including ingredients and preparation methods, is available to enhance the customer experience and assist in marketing efforts.
+
+
+---
 
 ## Start virtual environment
 
