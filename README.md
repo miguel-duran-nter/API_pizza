@@ -60,9 +60,9 @@ uvicorn main:app --reload
 
 - '/docs' -> Swager Documentation
 - '/users' -> List user, only if you are admin
-- '/users/<user_id>' -> Displays the data of the user with the entered id
+- '/users/me' -> Displays the data of the logged in user
 - '/orders' -> List orders
-- '/orders/history/<user_id>' -> Displays the order history of the user with the entered id
+- '/orders/history' -> Displays the order history of the user with the entered id
 
 ### POST
 
@@ -74,3 +74,4 @@ uvicorn main:app --reload
 ### PUT
 
 - '/orders/<order_id>' -> Updates the order status with the entered id
+- '/users/update' -> Update the data of the user who has logged in
