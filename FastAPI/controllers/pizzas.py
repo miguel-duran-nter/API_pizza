@@ -1,7 +1,9 @@
+from typing import List
 from fastapi import APIRouter, HTTPException, status
 from models.schemas import Base
 from db.client import SessionLocal, engine
 from services.pizzas import get_pizza_by_id, get_all_pizzas
+from models.dto import PizzaDetail, PizzaList
 
 Base.metadata.create_all(bind=engine)
 
@@ -11,7 +13,7 @@ app = APIRouter(
 )
 
 
-@app.get("/{pizza_id}")
+@app.get("/{pizza_id}", response_model=PizzaDetail)
 async def pizza_id(pizza_id: int):
     """
     Displays the details of the pizza with the entered id
@@ -27,7 +29,7 @@ async def pizza_id(pizza_id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
-@app.get("/")
+@app.get("/", response_model=List[PizzaList])
 async def pizza_with_ingredients():
     """
     Displays the details of the pizza with the entered id
