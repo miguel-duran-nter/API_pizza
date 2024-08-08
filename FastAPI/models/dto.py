@@ -4,6 +4,7 @@ from typing import List, Optional
 
 
 class User(BaseModel):
+    id: int
     name: str
     username: str
     email: str
@@ -43,6 +44,7 @@ class UserUpdate(BaseModel):
     name: Optional[str] = None
     phone: Optional[str] = None
     address: Optional[str] = None
+    username: Optional[str] = None
 
 
 class LoginRequest(BaseModel):
@@ -89,7 +91,7 @@ class PizzaDetail(BaseModel):
 
 
 class OrderDetailBase(BaseModel):
-    pizza_id: int
+    # pizza_id: int
     quantity: int
 
     class Config:
@@ -104,7 +106,7 @@ class OrderDetail(OrderDetailBase):
 
 
 class OrderBase(BaseModel):
-    user_id: int
+    # user_id: int
     order_date: datetime
     total: float
     status: str
@@ -114,7 +116,6 @@ class OrderBase(BaseModel):
 
 
 class OrderCreate(BaseModel):
-    user_id: int
     order_date: datetime
     status: str
     details: List[OrderDetailBase]
@@ -131,6 +132,15 @@ class Order(OrderBase):
     order_id: int
     details: List[OrderDetail]
     user: UserOrder
+
+    class Config:
+        from_attributes = True
+
+class PaginatedOrders(BaseModel):
+    total: int
+    page: int
+    page_size: int
+    orders: List[Order]  
 
     class Config:
         from_attributes = True

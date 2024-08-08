@@ -22,19 +22,21 @@ async def create_user(user: User, db: Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
-async def user_detail(user_id: int, db: Session, request: Request):
+async def user_detail(user_id: str, db: Session, request: Request):
     try:
+        user_id_decode = base64.b64decode(user_id.encode()).decode("utf-8")
+        user_id_int = int(user_id_decode)
         with db as session:
             db_user = (
-                session.query(schemas.User).filter(schemas.User.id == user_id).first()
+                session.query(schemas.User)
+                .filter(schemas.User.id == user_id_int)
+                .first()
             )
             user_dto = UserOrder(
                 name=db_user.name,
                 email=db_user.email,
-                username=db_user.username,
                 phone=db_user.phone,
                 address=db_user.address,
-                profile=db_user.profile,
             )
             return user_dto
 
@@ -42,20 +44,27 @@ async def user_detail(user_id: int, db: Session, request: Request):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
-async def read_user(db: Session):
+async def read_user(db: Session, profile: str):
     try:
-        with db as session:
-            db_user = session.query(schemas.User).all()
-            users_dto = []
-            for user in db_user:
-                user_dto = UserOrder(
-                    name=user.name,
-                    email=user.email,
-                    phone=user.phone,
-                    address=user.address,
-                )
-                users_dto.append(user_dto)
-            return users_dto
+        profile_decode = base64.b64decode(profile.encode()).decode("utf-8")
+        if profile_decode == "admin":
+            with db as session:
+                db_user = session.query(schemas.User).all()
+                user_orders = [
+                    UserOrder(
+                        name=user.name,
+                        email=user.email,
+                        phone=user.phone,
+                        address=user.address,
+                    )
+                    for user in db_user
+                ]
+
+            return user_orders
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail="Access Denied"
+            )
 
     except SQLAlchemyError as e:
         error_msg = str(e.__cause__) or str(e)
@@ -68,18 +77,25 @@ async def get_user_by_id(db: Session, user_id: int):
 
 
 async def update_user(db: Session, user: User, user_update: UserUpdate):
-    # Asegurarse de que la instancia esté asociada con la sesión actual
-    user = db.merge(user)
+    with db as session:
+        try:
+            # Asegurarse de que la instancia esté asociada con la sesión actual
+            user = session.merge(user)
 
-    if user_update.email:
-        user.email = user_update.email
-    if user_update.name:
-        user.name = user_update.name
-    if user_update.phone:
-        user.phone = user_update.phone
-    if user_update.address:
-        user.address = user_update.address
+            if user_update.email:
+                user.email = user_update.email
+            if user_update.name:
+                user.name = user_update.name
+            if user_update.phone:
+                user.phone = user_update.phone
+            if user_update.address:
+                user.address = user_update.address
+            if user_update.username:
+                user.username = user_update.username
 
-    db.commit()
-    db.refresh(user)
-    return user
+            session.commit()
+            session.refresh(user)
+            return user
+
+        except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
