@@ -18,7 +18,7 @@ The API is designed to include the following key verticals. The endpoints listed
 #### **/api/orders [Optional Admin Role]:**
 - **Order Management:** Orders are displayed chronologically, with the most recent orders appearing first. Each order entry includes all details necessary for operational tasks, such as customer information and delivery specifics.
 
-<!-- - **Pagination [Optional]:** Support for pagination in the order list is optional but recommended for better data management. -->
+ - **Pagination [Optional]:** Support for pagination in the order list is optional but recommended for better data management.
 
 - **Order Details:** Each order is assigned a unique identifier. The API provides an endpoint for retrieving all relevant details about a specific order using this identifier.
 
