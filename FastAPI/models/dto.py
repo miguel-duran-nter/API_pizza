@@ -129,6 +129,7 @@ class OrderBase(BaseModel):
 
 
 class OrderCreate(BaseModel):
+    user_id: int
     order_date: datetime
     status: str
     details: List[OrderDetailBase]
