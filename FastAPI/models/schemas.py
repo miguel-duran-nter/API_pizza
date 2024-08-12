@@ -43,7 +43,6 @@ class Ingredient(Base):
 class Order(Base):
     __tablename__ = 'orders'
 
-    
     order_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     order_date = Column(DateTime, nullable=False)
